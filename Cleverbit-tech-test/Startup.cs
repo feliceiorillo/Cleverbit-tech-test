@@ -1,3 +1,4 @@
+using Cleverbit_tech_test.Repository;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -10,6 +11,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+using Cleverbit_tech_test.Services.Implementation;
+using Cleverbit_tech_test.Services.Interface;
 
 namespace Cleverbit_tech_test
 {
@@ -26,6 +30,11 @@ namespace Cleverbit_tech_test
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+            services.AddDbContext<DataContext>(options =>
+                    options.UseSqlServer(Configuration.GetConnectionString("DataContext")));
+
+            services.AddScoped<IReadInfoService, ReadInfoService>();
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
