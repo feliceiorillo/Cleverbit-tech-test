@@ -55,6 +55,7 @@ namespace Cleverbit_tech_test.Services.Implementation
                 var regions = await File.ReadAllLinesAsync(regionsCsvPath);
                 var employees = await File.ReadAllLinesAsync(employeesCsvPath);
 
+                #region ReadRegions
                 var listRegions = new List<Regions>();
                 foreach (var region in regions)
                 {
@@ -91,8 +92,25 @@ namespace Cleverbit_tech_test.Services.Implementation
                     });
                 }
                 _db.Regions.AddRange(listRegions);
-                await _db.SaveChangesAsync();
+                #endregion
 
+                #region ReadEmployees
+                var listEmployees = new List<Employees>();
+                foreach(var employee in employees)
+                {
+                    string[] arr = employee.Split(",");
+
+                    listEmployees.Add(new Employees()
+                    {
+                        IdRegion = Convert.ToInt32(arr[0]),
+                        FirstName = arr[1],
+                        LastName = arr[2]
+                    });
+                }
+                _db.Employees.AddRange(listEmployees);
+                #endregion
+                await _db.SaveChangesAsync();
+                response.Message = $"Inserted {listEmployees.Count} Employees and {listRegions} regions";
                 response.IsSuccess = true;
             }
             catch (Exception ex)
